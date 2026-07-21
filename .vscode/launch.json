@@ -1,0 +1,38 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "▶ Debug main",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": ["--import", "tsx", "${workspaceFolder}/src/index.ts"],
+      "cwd": "${workspaceFolder}",
+      "sourceMaps": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "openOnSessionStart",
+      // "envFile": "${workspaceFolder}/../../.env"
+    },{
+      "name": "Debug current",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": ["--import", "tsx", "${relativeFile}"],
+      "cwd": "${workspaceFolder}",
+      "sourceMaps": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "openOnSessionStart",
+      // "envFile": "${workspaceFolder}/../../.env"
+    },
+    {
+      "name": "Debug test",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "test", "${relativeFile}"],
+      "cwd": "${workspaceFolder}",
+      "sourceMaps": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      // "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
