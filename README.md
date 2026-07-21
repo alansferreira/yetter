@@ -1,6 +1,13 @@
-# yetter
+<div align="center">
+  <h1>yetter</h1>
+  <p>A JavaScript library to update YAML content safely using simplified JSONPath operations.</p>
+  <a href="https://www.npmjs.com/package/yetter"><img alt="npm version" src="https://img.shields.io/npm/v/yetter"></a>
+  <a href="https://www.npmjs.com/package/yetter"><img alt="npm downloads" src="https://img.shields.io/npm/dm/yetter"></a>
+  <a href="https://www.npmjs.com/package/yetter"><img alt="npm license" src="https://img.shields.io/npm/l/yetter"></a>
+  <a href="https://www.npmjs.com/package/yetter"><img alt="types" src="https://img.shields.io/npm/types/yetter"></a>
+</div>
 
-A Javascript library for updating YAML content with:
+A JavaScript library for updating YAML content with:
 
 - Support for multi-document YAML files (`---`)
 - List of changes by simplified `jsonpath`
@@ -12,6 +19,22 @@ A Javascript library for updating YAML content with:
 
 ```bash
 npm i yetter
+```
+
+### Installation Shortcuts
+
+```bash
+# npm
+npm i yetter
+
+# pnpm
+pnpm add yetter
+
+# yarn
+yarn add yetter
+
+# bun
+bun add yetter
 ```
 
 ## API
