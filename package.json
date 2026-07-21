@@ -4,6 +4,10 @@
   "description": "A YAML update library with multi-document support and typed JSONPath-like node setters.",
   "type": "commonjs",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "dev": "node --import tsx src/index.ts",
     "build": "webpack --config webpack.config.cjs",
