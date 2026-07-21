@@ -46,7 +46,7 @@ interface YamlSetOperation {
 
 ## Supported Path Syntax
 
-Node navigation only:
+Node navigation and array iteration:
 
 - `$.app.name`
 - `$.services[0].image`
@@ -55,12 +55,42 @@ Node navigation only:
 - `$doc[2]["api"]["base-url"]`
 - `$doc[?(kind=='Component')].metadata.name`
 - `$doc[?(metadata.name!='legacy')].metadata.name`
+- `$.items[].name` - Wildcard: updates all array items
 - `$.items[?(kind=='Component')].metadata.name`
 - `$.spec.components[?(kind=='Component')].fields[?(enabled==true)].name`
+- `$.apps[?(name=='app1')].versions[].replicas` - Filter then wildcard
 
 When the `$doc[n]` selector is not provided, the operation is applied to all YAML documents.
 
-In filter selectors (`$doc[?(...)]`), simple comparisons are supported:
+### Array Iteration with Wildcard `[]` or `[*]`
+
+Use `[]` or `[*]` to iterate and update all elements in an array:
+
+```ts
+// Update all items (using empty brackets)
+const output = setYamlValues(input, [
+  { path: '$.items[].enabled', value: 'true', valueType: 'boolean' },
+])
+
+// Or use [*] (same behavior)
+const output = setYamlValues(input, [
+  { path: '$.items[*].enabled', value: 'true', valueType: 'boolean' },
+])
+
+// Combine with property navigation
+const output = setYamlValues(input, [
+  { path: '$.services[].metadata.replicas', value: '3', valueType: 'number' },
+])
+
+// Combine filter and wildcard
+const output = setYamlValues(input, [
+  { path: "$.apps[?(name=='web')].versions[].ready", value: 'false', valueType: 'boolean' },
+])
+```
+
+### Filter Selectors
+
+In filter selectors (`$doc[?(...)]` and `[?(...)]`), simple comparisons are supported:
 
 - Operators: `==` and `!=`
 - Left side: Node navigation (e.g., `kind`, `metadata.name`, `["kind"]`)
@@ -71,9 +101,9 @@ The `@` symbol is also accepted to represent the current item (e.g., `$.items[?(
 
 Not supported in this version:
 
-- Wildcard (`[*]`)
-- Slices
+- Slices (`[1:3]`)
 - Value expressions
+- Complex boolean logic in filters
 
 ## Basic Example
 

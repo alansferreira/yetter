@@ -255,4 +255,91 @@ list:
     expect(output).toContain('image: repo/app:v2')
     expect(output).toContain('image: repo/app:v2 # image comment\n\nmetadata:')
   })
+
+  test('updates all array items using wildcard []', () => {
+    const input = `items:
+  - name: first
+    enabled: false
+  - name: second
+    enabled: true
+  - name: third
+    enabled: false
+`
+
+    const output = setYamlValues(input, [
+      { path: '$.items[].enabled', value: 'true', valueType: 'boolean' },
+    ])
+
+    const parsed = parse(output) as { items: Array<{ name: string; enabled: boolean }> }
+
+    expect(parsed.items).toHaveLength(3)
+    expect(parsed.items[0].enabled).toBe(true)
+    expect(parsed.items[1].enabled).toBe(true)
+    expect(parsed.items[2].enabled).toBe(true)
+  })
+
+  test('supports wildcard with nested property access', () => {
+    const input = `services:
+  - metadata:
+      replicas: 1
+  - metadata:
+      replicas: 2
+  - metadata:
+      replicas: 3
+`
+
+    const output = setYamlValues(input, [
+      { path: '$.services[].metadata.replicas', value: '5', valueType: 'number' },
+    ])
+
+    const parsed = parse(output) as { services: Array<{ metadata: { replicas: number } }> }
+
+    expect(parsed.services[0].metadata.replicas).toBe(5)
+    expect(parsed.services[1].metadata.replicas).toBe(5)
+    expect(parsed.services[2].metadata.replicas).toBe(5)
+  })
+
+  test('throws when wildcard is used on non-array node path', () => {
+    const input = `app:
+  name: service
+`
+
+    expect(() =>
+      setYamlValues(input, [{ path: '$.app[].name', value: 'x', valueType: 'string' }]),
+    ).toThrow(/Wildcard segments can only be applied to arrays/i)
+  })
+
+  test('combinations of filters and wildcards', () => {
+    const input = `apps:
+  - name: app1
+    versions:
+      - tag: v1
+        ready: false
+      - tag: v2
+        ready: true
+  - name: app2
+    versions:
+      - tag: v3
+        ready: false
+      - tag: v4
+        ready: true
+`
+
+    const output = setYamlValues(input, [
+      {
+        path: "$.apps[?(name=='app1')].versions[].ready",
+        value: 'true',
+        valueType: 'boolean',
+      },
+    ])
+
+    const parsed = parse(output) as {
+      apps: Array<{ name: string; versions: Array<{ tag: string; ready: boolean }> }>
+    }
+
+    expect(parsed.apps[0].versions[0].ready).toBe(true)
+    expect(parsed.apps[0].versions[1].ready).toBe(true)
+    expect(parsed.apps[1].versions[0].ready).toBe(false)
+    expect(parsed.apps[1].versions[1].ready).toBe(true)
+  })
 })

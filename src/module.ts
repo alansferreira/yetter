@@ -25,7 +25,11 @@ type PathFilterSegment = {
   condition: FilterCondition
 }
 
-type OperationPathSegment = JsonPathSegment | PathFilterSegment
+type WildcardSegment = {
+  type: 'wildcard'
+}
+
+type OperationPathSegment = JsonPathSegment | PathFilterSegment | WildcardSegment
 
 type DocumentSelector =
   | { type: 'all' }
@@ -332,26 +336,33 @@ function parseOperationPath(path: string, fullPath: string): OperationPathSegmen
       const bracketEnd = findMatchingBracket(path, cursor)
       const content = path.slice(cursor + 1, bracketEnd).trim()
 
+      // Empty bracket [] is wildcard
       if (!content) {
-        throw new Error(`Invalid path "${path}". Empty bracket segment is not allowed.`)
-      }
-
-      const filterMatch = /^\?\((.*)\)$/.exec(content)
-      if (filterMatch) {
         segments.push({
-          type: 'filter',
-          condition: parseFilterCondition(filterMatch[1].trim(), fullPath, parseNodeFilterPath),
+          type: 'wildcard',
         })
       } else {
-        const quoted = /^("|')(.*)\1$/.exec(content)
-        if (quoted) {
-          segments.push(quoted[2])
-        } else if (/^\d+$/.test(content)) {
-          segments.push(Number(content))
+        const filterMatch = /^\?\((.*)\)$/.exec(content)
+        if (filterMatch) {
+          segments.push({
+            type: 'filter',
+            condition: parseFilterCondition(filterMatch[1].trim(), fullPath, parseNodeFilterPath),
+          })
+        } else if (content === '*') {
+          segments.push({
+            type: 'wildcard',
+          })
         } else {
-          throw new Error(
-            `Invalid path "${path}". Bracket notation supports numeric indexes, quoted node names or filters like [?()].`,
-          )
+          const quoted = /^("|')(.*)\1$/.exec(content)
+          if (quoted) {
+            segments.push(quoted[2])
+          } else if (/^\d+$/.test(content)) {
+            segments.push(Number(content))
+          } else {
+            throw new Error(
+              `Invalid path "${path}". Bracket notation supports numeric indexes, quoted node names, filters like [?()] or wildcard [*].`,
+            )
+          }
         }
       }
 
@@ -360,7 +371,7 @@ function parseOperationPath(path: string, fullPath: string): OperationPathSegmen
     }
 
     throw new Error(
-      `Invalid path "${path}". Only node navigation with '.' and '[index|"key"|?()]' is supported.`,
+      `Invalid path "${path}". Only node navigation with '.' and '[index|"key"|?()|*]' is supported.`,
     )
   }
 
@@ -386,18 +397,26 @@ function resolveConcreteTargetPaths(
     for (const candidate of candidates) {
       const currentValue = readValueAtPath(rootValue, candidate)
       if (!Array.isArray(currentValue)){
-        throw new Error(`Invalid path "${originalPath}". Filter segments can only be applied to arrays.`)
+        const segmentType = segment.type === 'wildcard' ? 'Wildcard' : 'Filter'
+        throw new Error(`Invalid path "${originalPath}". ${segmentType} segments can only be applied to arrays.`)
       }
 
-      for (let index = 0; index < currentValue.length; index += 1) {
-        if (matchesFilterCondition(currentValue[index], segment.condition)) {
+      if (segment.type === 'wildcard') {
+        for (let index = 0; index < currentValue.length; index += 1) {
           nextCandidates.push([...candidate, index])
+        }
+      } else {
+        for (let index = 0; index < currentValue.length; index += 1) {
+          if (matchesFilterCondition(currentValue[index], segment.condition)) {
+            nextCandidates.push([...candidate, index])
+          }
         }
       }
     }
 
     if (nextCandidates.length === 0) {
-      throw new Error(`No nodes matched filter in path "${originalPath}".`)
+      const segmentType = segment.type === 'wildcard' ? 'No elements matched wildcard' : 'No nodes matched filter'
+      throw new Error(`${segmentType} in path "${originalPath}".`)
     }
 
     candidates = nextCandidates
