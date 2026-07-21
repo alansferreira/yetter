@@ -14,7 +14,11 @@
     "start": "node dist/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:debug": "vitest --run --inspect-brk"
+    "test:debug": "vitest --run --inspect-brk",
+    "release": "standard-version",
+    "release:minor": "standard-version --release-as minor",
+    "release:major": "standard-version --release-as major",
+    "release:patch": "standard-version --release-as patch"
   },
   "dependencies": {
     "chalk": "^5.6.2",
@@ -28,6 +32,7 @@
     "@types/lodash": "^4.17.23",
     "@types/node": "^20.10.0",
     "copy-webpack-plugin": "^13.0.1",
+    "standard-version": "^9.5.0",
     "ts-loader": "^9.5.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
