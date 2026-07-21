@@ -1,14 +1,14 @@
 # yaml-setter
 
-Biblioteca TypeScript para atualizar conteudo YAML com:
+A TypeScript library for updating YAML content with:
 
-- suporte a mais de um documento YAML (`---`)
-- lista de alteracoes por `jsonpath` simplificado
-- coercao de tipo do novo valor (`string`, `number`, `boolean`, `null`, `array`, `object`)
-- foco em atualizacao de nos e selecao de documento por indice/filtro simples
-- compatibilidade com Node.js e navegador
+- Support for multi-document YAML files (`---`)
+- List of changes by simplified `jsonpath`
+- Type coercion for new values (`string`, `number`, `boolean`, `null`, `array`, `object`)
+- Focus on node updates and document selection by index/simple filter
+- Compatibility with Node.js and browsers
 
-## Instalacao
+## Installation
 
 ```bash
 npm i yaml-setter
@@ -25,7 +25,7 @@ import { setYamlValues, type YamlSetOperation } from 'yaml-setter'
 - `yamlContent: string`
 - `operations: YamlSetOperation[]`
 - `options?: { prettyErrors?: boolean }`
-- retorno: `string` com YAML atualizado
+- Returns: `string` with updated YAML
 
 ### `YamlSetOperation`
 
@@ -39,14 +39,14 @@ interface YamlSetOperation {
 }
 ```
 
-- `path`: jsonpath simplificado sempre iniciando com `$`
-- `path`: tambem aceita seletor de documento com `$doc[n]` e `$doc[?(...)]` para YAML multi-documento
-- `value`: novo valor
-- `valueType`: tipo final desejado
+- `path`: Simplified jsonpath always starting with `$`
+- `path`: Also supports document selectors with `$doc[n]` and `$doc[?(...)]` for multi-document YAML
+- `value`: New value
+- `valueType`: Desired final type
 
-## Sintaxe de Path Suportada
+## Supported Path Syntax
 
-Somente navegacao por nos:
+Node navigation only:
 
 - `$.app.name`
 - `$.services[0].image`
@@ -58,24 +58,24 @@ Somente navegacao por nos:
 - `$.items[?(kind=='Component')].metadata.name`
 - `$.spec.components[?(kind=='Component')].fields[?(enabled==true)].name`
 
-Quando o seletor `$doc[n]` nao e informado, a operacao e aplicada em todos os documentos do YAML.
+When the `$doc[n]` selector is not provided, the operation is applied to all YAML documents.
 
-No seletor de filtro (`$doc[?(...)]`), sao suportadas comparacoes simples:
+In filter selectors (`$doc[?(...)]`), simple comparisons are supported:
 
-- operadores: `==` e `!=`
-- lado esquerdo: navegacao por nos (ex.: `kind`, `metadata.name`, `["kind"]`)
-- lado direito: `string`, `number`, `boolean` ou `null`
+- Operators: `==` and `!=`
+- Left side: Node navigation (e.g., `kind`, `metadata.name`, `["kind"]`)
+- Right side: `string`, `number`, `boolean`, or `null`
 
-Em filtros de path de nos (`[?(...)]`), as mesmas comparacoes sao suportadas em qualquer nivel.
-Tambem e aceito `@` para representar o item atual (ex.: `$.items[?(@.enabled==true)].name`).
+In node path filters (`[?(...)]`), the same comparisons are supported at any level.
+The `@` symbol is also accepted to represent the current item (e.g., `$.items[?(@.enabled==true)].name`).
 
-Nao suportado nesta versao:
+Not supported in this version:
 
-- wildcard (`[*]`)
-- slices
-- expressoes por valor
+- Wildcard (`[*]`)
+- Slices
+- Value expressions
 
-## Exemplo Basico
+## Basic Example
 
 ```ts
 import { setYamlValues } from 'yaml-setter'
@@ -95,7 +95,7 @@ const output = setYamlValues(input, [
 console.log(output)
 ```
 
-## Desenvolvimento
+## Development
 
 ```bash
 npm test
