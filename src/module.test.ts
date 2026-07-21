@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { parse } from 'yaml'
-import { castValueByType, parseNodeJsonPath, setYamlValues } from '@/module'
+import { castValueByType, parseNodeJsonPath, setYamlValues } from './module'
 
 describe('parseNodeJsonPath', () => {
   test('parses dot and bracket paths', () => {

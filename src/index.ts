@@ -6,4 +6,4 @@ export {
   type SetYamlValuesOptions,
   type YamlSetOperation,
   type YamlValueType,
-} from '@/module'
+} from './module'

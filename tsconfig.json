@@ -9,9 +9,6 @@
     "baseUrl": ".",
     "rootDir": "./src",
     "outDir": "./dist",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
     "declaration": true,
     "types": ["node", "vitest/globals"]
   },
