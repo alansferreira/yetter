@@ -7,10 +7,13 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
+    "declaration": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["src/**/*.ts", "vitest.config.ts"]
+  "include": ["src/**/*.ts"]
 }
