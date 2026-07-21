@@ -1,6 +1,6 @@
-# yaml-setter
+# yetter
 
-A TypeScript library for updating YAML content with:
+A Javascript library for updating YAML content with:
 
 - Support for multi-document YAML files (`---`)
 - List of changes by simplified `jsonpath`
@@ -11,13 +11,13 @@ A TypeScript library for updating YAML content with:
 ## Installation
 
 ```bash
-npm i yaml-setter
+npm i yetter
 ```
 
 ## API
 
 ```ts
-import { setYamlValues, type YamlSetOperation } from 'yaml-setter'
+import { setYamlValues, type YamlSetOperation } from 'yetter'
 ```
 
 ### `setYamlValues(yamlContent, operations, options?)`
@@ -108,7 +108,7 @@ Not supported in this version:
 ## Basic Example
 
 ```ts
-import { setYamlValues } from 'yaml-setter'
+import { setYamlValues } from 'yetter'
 
 const input = `app:
   name: old-name
