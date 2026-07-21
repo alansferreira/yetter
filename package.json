@@ -1,6 +1,6 @@
 {
   "name": "yaml-setter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A YAML update library with multi-document support and typed JSONPath-like node setters.",
   "type": "commonjs",
   "main": "dist/index.js",
