@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/alansferreira/yaml-setter/compare/v1.0.4...v1.1.0) (2026-07-21)
+
+
+### Features
+
+* wildcards and array expressions ([149f1cc](https://github.com/alansferreira/yaml-setter/commit/149f1cc79e3a3c9953ef4a8f5c1342d2c679b9c2))
+
 ### [1.0.4](https://github.com/alansferreira/yaml-setter/compare/v1.0.3...v1.0.4) (2026-07-21)
 
 ### [1.0.3](https://github.com/alansferreira/yaml-setter/compare/v1.0.2...v1.0.3) (2026-07-21)
